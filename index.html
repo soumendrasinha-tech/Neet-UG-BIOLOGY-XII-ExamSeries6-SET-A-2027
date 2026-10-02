@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soumendra Sir's Biology Classes - NEET CBT Exam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for graphical analysis -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- HTML2Canvas for capturing result card image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- FontAwesome for CBT Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom Anti-Photo Mesh Pattern overlay to impair external phone cameras */
+        .anti-photo-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 0, transparent 8px),
+                repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.015) 0, rgba(0, 0, 0, 0.015) 1px, transparent 0, transparent 8px);
+        }
+
+        /* Dynamic Floating Watermark */
+        .watermark-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9998;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            opacity: 0.12;
+            user-select: none;
+        }
+
+        .watermark-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-25deg);
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #1e293b;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Prevent text selection across exam interface */
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Custom scrollbar for CBT question container */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 no-select min-h-screen flex flex-col justify-between" oncontextmenu="return false;">
+
+    <div class="anti-photo-overlay"></div>
+    <div id="watermarkGrid" class="watermark-container hidden"></div>
+
+    <!-- LOGIN / VERIFICATION MODAL GATE -->
+    <div id="verificationGate" class="fixed inset-0 bg-slate-900 bg-opacity-95 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 md:p-8 border border-slate-200 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"></div>
+            
+            <div class="text-center mb-6">
+                <h1 class="text-2xl md:text-3xl font-extrabold text-blue-900 tracking-tight">Soumendra Sir's Biology Classes</h1>
+                <p class="text-sm font-semibold text-slate-500 mt-1"><i class="fa-solid fa-phone mr-1"></i> Contact: 8910587106</p>
+                <div class="inline-block bg-blue-50 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-full mt-3 border border-blue-200">
+                    NEET BIOLOGY XII EXAM SERIES 6 SET A
+                </div>
+            </div>
+
+            <!-- Rules & Info Box -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-xs text-slate-700 space-y-2">
+                <p class="font-bold text-slate-900 border-b pb-1 text-sm"><i class="fa-solid fa-circle-info text-blue-600 mr-1.5"></i> Exam Instructions & Rules:</p>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li><strong>Syllabus:</strong> Biotechnology Principles & Processes, Health, Agriculture & Biosafety.</li>
+                    <li><strong>Total Questions:</strong> 90 Questions | <strong>Total Marks:</strong> 360 Marks | <strong>Duration:</strong> 1 Hour (60 Mins).</li>
+                    <li><strong>Marking Scheme:</strong> <span class="text-emerald-700 font-bold">+4</span> for correct response, <span class="text-rose-600 font-bold">-1</span> for wrong response.</li>
+                    <li><strong>Anti-Cheating Rules:</strong> Fullscreen mode is mandatory. Switching tabs or exiting fullscreen triggers <span class="text-rose-600 font-bold">Auto-Submission</span>.</li>
+                    <li>Password format is today's date in <strong>DDMMYYYY</strong> format.</li>
+                </ul>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Candidate Name</label>
+                    <input type="text" id="candidateName" required placeholder="Enter your full name" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-all" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Exam Password (DDMMYYYY)</label>
+                        <input type="password" id="examPassword" required placeholder="DDMMYYYY" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-all" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Security Captcha</label>
+                        <div class="flex items-center space-x-2">
+                            <span id="captchaDisplay" class="bg-slate-200 text-slate-800 font-mono font-bold px-3 py-2.5 rounded-lg text-center tracking-widest text-sm border border-slate-300 select-none">3 + 5 = ?</span>
+                            <input type="text" id="captchaInput" required placeholder="Answer" class="w-24 px-3 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-center font-bold" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loginError" class="hidden bg-rose-50 text-rose-700 text-xs font-semibold p-2.5 rounded-lg border border-rose-200 text-center"></div>
+
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-xl shadow-lg transition-all text-sm flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-play"></i>
+                    <span>START CBT EXAMINATION</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CBT EXAM MAIN HEADER -->
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div>
+                <h1 class="text-base md:text-lg font-bold tracking-tight">Soumendra Sir's Biology Classes - 8910587106</h1>
+                <p class="text-xs text-blue-200 font-medium">NEET BIOLOGY XII EXAM SERIES 6 SET A | Biotechnology Applications</p>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div class="bg-slate-800/80 border border-slate-700 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+                    <i class="fa-regular fa-clock text-amber-400 text-sm animate-pulse"></i>
+                    <span class="text-xs text-slate-300">Time Left:</span>
+                    <span id="timerDisplay" class="font-mono font-bold text-sm text-amber-300">60:00</span>
+                </div>
+                <div class="hidden sm:block bg-blue-950 border border-blue-800 rounded-lg px-3 py-1.5 text-xs text-right">
+                    <span class="text-slate-400 block text-[10px]">CANDIDATE</span>
+                    <span id="headerCandidateName" class="font-bold text-blue-200">Candidate Name</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CBT WORKSPACE -->
+    <main id="cbtMainInterface" class="max-w-7xl mx-auto w-full px-2 sm:px-4 py-4 flex-grow flex flex-col md:flex-row gap-4">
+        
+        <!-- LEFT PANEL: QUESTION CONTAINER -->
+        <section class="flex-grow bg-white rounded-xl shadow-md border border-slate-200 flex flex-col justify-between overflow-hidden">
+            
+            <!-- Question Box Header -->
+            <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
+                <span class="text-xs md:text-sm font-bold text-slate-700 bg-slate-200 px-3 py-1 rounded-md" id="questionNumberBadge">
+                    Question 1 of 90
+                </span>
+                <span class="text-xs font-semibold text-slate-500">
+                    Marks: <span class="text-emerald-600 font-bold">+4</span> | <span class="text-rose-600 font-bold">-1</span>
+                </span>
+            </div>
+
+            <!-- Question Body Area -->
+            <div class="p-4 md:p-6 overflow-y-auto max-h-[calc(100vh-260px)] min-h-[380px]" id="questionContentArea">
+                <!-- Dynamic Content Rendered Here -->
+            </div>
+
+            <!-- CBT Action Control Bar -->
+            <div class="bg-slate-50 border-t border-slate-200 px-4 py-3 flex flex-wrap gap-2 items-center justify-between">
+                <div class="flex gap-2">
+                    <button onclick="markForReview()" class="px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-300 text-xs font-bold rounded-lg transition-all flex items-center space-x-1">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <span>Mark for Review</span>
+                    </button>
+                    <button onclick="clearResponse()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition-all flex items-center space-x-1">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Clear Response</span>
+                    </button>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="prevQuestion()" id="prevBtn" class="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition-all disabled:opacity-40">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Previous
+                    </button>
+                    <button onclick="nextQuestion()" id="nextBtn" class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold rounded-lg transition-all shadow-md">
+                        Save & Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: COLOURFUL PALETTE DOTS -->
+        <aside class="w-full md:w-80 bg-white rounded-xl shadow-md border border-slate-200 p-4 flex flex-col justify-between min-w-[280px]">
+            <div>
+                <h2 class="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 mb-3 flex justify-between items-center">
+                    <span><i class="fa-solid fa-table-cells text-blue-600 mr-1.5"></i> Question Palette</span>
+                </h2>
+
+                <!-- Status Legend -->
+                <div class="grid grid-cols-2 gap-2 text-[11px] mb-4 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block border border-emerald-600"></span>
+                        <span class="text-slate-600 font-medium">Answered (<span id="countAnswered">0</span>)</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3.5 h-3.5 rounded-full bg-rose-500 inline-block border border-rose-600"></span>
+                        <span class="text-slate-600 font-medium">Not Answered (<span id="countNotAnswered">90</span>)</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3.5 h-3.5 rounded-full bg-amber-400 inline-block border border-amber-500"></span>
+                        <span class="text-slate-600 font-medium">Marked Review (<span id="countMarked">0</span>)</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3.5 h-3.5 rounded-full bg-slate-200 inline-block border border-slate-300"></span>
+                        <span class="text-slate-600 font-medium">Not Visited (<span id="countNotVisited">89</span>)</span>
+                    </div>
+                </div>
+
+                <!-- Palette Grid Container -->
+                <div id="paletteGrid" class="grid grid-cols-6 gap-2 max-h-72 md:max-h-96 overflow-y-auto p-1 border rounded-lg border-slate-100">
+                    <!-- 90 Dots Generated Dynamically -->
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-200">
+                <button onclick="confirmSubmitTest()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-md transition-all text-xs flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>SUBMIT TEST</span>
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- END RESULT & FEEDBACK REPORT (HIDDEN INITIALLY) -->
+    <div id="resultModal" class="hidden fixed inset-0 bg-slate-900 bg-opacity-95 z-50 overflow-y-auto p-4 flex items-center justify-center">
+        <div class="max-w-3xl w-full bg-white rounded-2xl shadow-2xl p-6 md:p-8 my-8 relative border border-slate-200">
+            
+            <!-- Result Card Container (Captured for Image) -->
+            <div id="resultCardCapture" class="p-4 bg-white rounded-xl border border-slate-200">
+                
+                <!-- Report Header -->
+                <div class="text-center border-b pb-4 mb-4">
+                    <h2 class="text-2xl font-extrabold text-blue-900">Soumendra Sir's Biology Classes</h2>
+                    <p class="text-xs font-semibold text-slate-500">Contact: +91 8910587106 | NEET BIOLOGY XII EXAM SERIES 6 SET A</p>
+                    <div class="mt-2 inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-300">
+                        OFFICIAL CBT SCORECARD
+                    </div>
+                </div>
+
+                <!-- Candidate Info Summary -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-6">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">CANDIDATE NAME</span>
+                        <span id="resCandidateName" class="font-bold text-slate-800">Candidate Name</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">TOTAL MARKS</span>
+                        <span id="resTotalScore" class="font-bold text-blue-700 text-base">0 / 360</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">TOTAL ATTEMPTED</span>
+                        <span id="resAttempted" class="font-bold text-slate-800">0 / 90</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">ACCURACY RATE</span>
+                        <span id="resAccuracy" class="font-bold text-emerald-600 text-base">0%</span>
+                    </div>
+                </div>
+
+                <!-- Graphical Representation & Detailed Breakdown -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-6">
+                    <div class="w-full h-48 flex justify-center items-center">
+                        <canvas id="resultChart"></canvas>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between items-center p-2 rounded-md bg-emerald-50 border border-emerald-200">
+                            <span class="font-semibold text-emerald-800"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Correct Answers (+4)</span>
+                            <span id="resCorrect" class="font-bold text-emerald-800 text-sm">0</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 rounded-md bg-rose-50 border border-rose-200">
+                            <span class="font-semibold text-rose-800"><i class="fa-solid fa-circle-xmark text-rose-600 mr-1.5"></i> Incorrect Answers (-1)</span>
+                            <span id="resIncorrect" class="font-bold text-rose-800 text-sm">0</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 rounded-md bg-slate-100 border border-slate-200">
+                            <span class="font-semibold text-slate-700"><i class="fa-solid fa-circle-minus text-slate-400 mr-1.5"></i> Unattempted Questions (0)</span>
+                            <span id="resUnattempted" class="font-bold text-slate-700 text-sm">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-[10px] text-center text-slate-400 border-t pt-2">
+                    Generated automatically by NEET CBT Exam System | Verified & Authenticated Report
+                </div>
+            </div>
+
+            <!-- WhatsApp Send Button -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button onclick="sendMarksToWhatsApp()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg transition-all text-xs flex items-center justify-center space-x-2">
+                    <i class="fa-brands fa-whatsapp text-base"></i>
+                    <span>SEND RESULT CARD TO SIR (+91 8910587106)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MASTER QUESTION BANK (90 NON-REPEATING QUESTIONS ACCORDING TO SPECIFIED TOPIC & TYPES)
+        // Types: 30 Statement, 30 Assertion-Reasoning, 20 Case Study, 10 Diagram
+        const masterQuestions = [
+            
+            // ================= 30 STATEMENT-BASED QUESTIONS =================
+            {
+                type: "statement",
+                id: 1,
+                q: "Select the correct option regarding Statement I and Statement II:",
+                statement1: "Recombinant DNA technology uses restriction enzymes that cut DNA at specific palindromic nucleotide sequences.",
+                statement2: "EcoRI cuts the DNA duplex between bases G and A when the sequence GAATTC is present in DNA.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 2,
+                q: "Consider the following statements regarding Bt toxin produced by Bacillus thuringiensis:",
+                statement1: "Bt toxin protein exists as inactive protoxin in the bacterium.",
+                statement2: "The alkaline pH of the midgut of insect solubilizes the crystals and converts protoxin into active toxin.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 3,
+                q: "Evaluate statements concerning RNA interference (RNAi):",
+                statement1: "RNAi takes place in all eukaryotic organisms as a method of cellular defense.",
+                statement2: "RNAi involves silencing of a specific mRNA due to a complementary double-stranded RNA molecule.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 4,
+                q: "Evaluate statements regarding genetically engineered human insulin (Humulin):",
+                statement1: "Mature functional human insulin contains A-chain and B-chain linked by disulfide bonds.",
+                statement2: "Eli Lilly produced insulin by inserting A and B chains together as a single polypeptide into E. coli.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 5,
+                q: "Read statements concerning Gene Therapy:",
+                statement1: "First clinical gene therapy was given in 1990 to a 4-year-old girl with Adenosine Deaminase (ADA) deficiency.",
+                statement2: "ADA enzyme is critical for the proper functioning of the immune system.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 6,
+                q: "Evaluate statements regarding Transgenic Animals:",
+                statement1: "Over 95 percent of all existing transgenic animals are transgenic pigs.",
+                statement2: "Transgenic mice are widely used for testing safety of vaccines before human application.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 3
+            },
+            {
+                type: "statement",
+                id: 7,
+                q: "Consider statements regarding Biopiracy:",
+                statement1: "Biopiracy refers to the use of bio-resources by multinational companies without proper authorization.",
+                statement2: "In 1997, an American company got patent rights on Basmati Rice through the US Patent and Trademark Office.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 8,
+                q: "Read the statements regarding Restriction Endonucleases:",
+                statement1: "Exonucleases remove nucleotides from the ends of DNA, while endonucleases cut at specific positions within DNA.",
+                statement2: "First restriction endonuclease isolated was EcoRI.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 9,
+                q: "Consider statements regarding Gel Electrophoresis:",
+                statement1: "DNA fragments are negatively charged molecules and move towards the anode under an electric field.",
+                statement2: "Ethidium bromide stained DNA fragments can be visualized directly under normal white light.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 10,
+                q: "Evaluate statements regarding Polymerase Chain Reaction (PCR):",
+                statement1: "Taq polymerase is isolated from thermophilic bacterium Thermus aquaticus.",
+                statement2: "The step of Annealing requires high temperature around 94-96 °C.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 11,
+                q: "Evaluate statements on Selectable Markers:",
+                statement1: "Selectable markers help in identifying and eliminating non-transformants.",
+                statement2: "In pBR322, ampicillin resistance gene (amp<sup>R</sup>) and tetracycline resistance gene (tet<sup>R</sup>) act as selectable markers.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 12,
+                q: "Consider statements on Downstream Processing:",
+                statement1: "Downstream processing includes separation and purification of the biosynthesized product.",
+                statement2: "Quality control testing is uniform for all biotechnological products without variation.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 13,
+                q: "Evaluate statements on Cry genes:",
+                statement1: "cryIAc and cryIIAb control cotton bollworms.",
+                statement2: "cryIAb controls corn borer.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 14,
+                q: "Consider statements on Alpha-1-antitrypsin:",
+                statement1: "Transgenic animals are produced to yield human proteins like alpha-1-antitrypsin.",
+                statement2: "Alpha-1-antitrypsin is used to treat emphysema.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 15,
+                q: "Evaluate statements on Transgenic Cow Rosie:",
+                statement1: "First transgenic cow, Rosie, was produced in the year 1997.",
+                statement2: "Rosie produced human alpha-lactalbumin enriched milk containing 2.4 grams per liter.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 16,
+                q: "Read statements regarding GEAC:",
+                statement1: "GEAC stands for Genetic Engineering Approval Committee.",
+                statement2: "GEAC makes decisions regarding the validity of GM research and safety of introducing GM organisms.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 17,
+                q: "Consider statements on Agrobacterium tumefaciens:",
+                statement1: "Agrobacterium tumefaciens is a pathogen of several dicot plants.",
+                statement2: "The Ti plasmid of Agrobacterium tumefaciens has been disarmed and modified into a cloning vector.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 18,
+                q: "Evaluate statements on Competent Host Transformation:",
+                statement1: "Divalent cations like Ca<sup>2+</sup> increase the efficiency of DNA entry through pores in cell wall.",
+                statement2: "Heat shock is given at 42 °C to introduce recombinant DNA into host bacteria.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 19,
+                q: "Consider statements on Stirred-tank Bioreactors:",
+                statement1: "A stirred-tank reactor is usually cylindrical with a curved base to facilitate mixing.",
+                statement2: "The stirrer ensures even availability of oxygen and thorough mixing throughout the bioreactor.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 20,
+                q: "Evaluate statements on ELISA Technique:",
+                statement1: "ELISA is based on the principle of antigen-antibody interaction.",
+                statement2: "Infection by pathogen can be detected by presence of antigens or antibodies synthesized against pathogen.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 21,
+                q: "Consider statements on Protoxin activation:",
+                statement1: "Bt toxin protein does not kill Bacillus thuringiensis bacterium because it is stored in inactive protoxin form.",
+                statement2: "Insects are killed because acidic pH in insect foregut converts protoxin into toxic active form.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 22,
+                q: "Evaluate statements on Insertion Inactivation:",
+                statement1: "Insertional inactivation differentiates recombinants from non-recombinants on chromogenic substrate basis.",
+                statement2: "Recombinant colonies produce blue color in presence of chromogenic substrate.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 23,
+                q: "Consider statements on Chitinase enzyme:",
+                statement1: "Chitinase is used to digest fungal cell wall to isolate DNA.",
+                statement2: "Lysozyme is used for plant cell wall degradation.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 24,
+                q: "Evaluate statements on Gene Gun (Biolistics):",
+                statement1: "Biolistics method is suitable for transformation of animal host cells.",
+                statement2: "Microparticles of gold or tungsten coated with DNA are bombarded into target cells.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 3
+            },
+            {
+                type: "statement",
+                id: 25,
+                q: "Consider statements on Molecular Probes:",
+                statement1: "A single stranded DNA or RNA tagged with a radioactive molecule is called a probe.",
+                statement2: "Probe hybridizes to its complementary DNA in clone followed by detection using autoradiography.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 26,
+                q: "Evaluate statements on Golden Rice:",
+                statement1: "Golden Rice is a genetically modified rice variety enriched with Vitamin A (beta-carotene).",
+                statement2: "It was developed to alleviate blindness caused by deficiency of Vitamin C in developing nations.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 27,
+                q: "Consider statements on Indian Patents Act:",
+                statement1: "The Indian Parliament has cleared the second amendment of Indian Patents Bill.",
+                statement2: "The amendment considers emergency provisions and research development initiatives.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 28,
+                q: "Evaluate statements on Retroviruses in Biotech:",
+                statement1: "Retroviruses in animals have the ability to transform normal cells into cancerous cells.",
+                statement2: "Disarmed retroviruses are used as vectors to deliver desirable genes into animal cells.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+            {
+                type: "statement",
+                id: 29,
+                q: "Consider statements on Sparged Stirred-tank Bioreactor:",
+                statement1: "In sparged stirred-tank bioreactor, sterile air bubbles are sparged through the reactor.",
+                statement2: "Sparging drastically decreases the surface area for oxygen transfer.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 2
+            },
+            {
+                type: "statement",
+                id: 30,
+                q: "Evaluate statements on Recombinant Vaccines:",
+                statement1: "Recombinant DNA technology allows production of antigenic polypeptides in microbes.",
+                statement2: "Hepatitis B vaccine produced from yeast is an example of recombinant vaccine.",
+                options: [
+                    "Both Statement I and Statement II are correct.",
+                    "Both Statement I and Statement II are incorrect.",
+                    "Statement I is correct but Statement II is incorrect.",
+                    "Statement I is incorrect but Statement II is correct."
+                ],
+                correct: 0
+            },
+
+            // ================= 30 ASSERTION & REASONING QUESTIONS =================
+            {
+                type: "ar",
+                id: 31,
+                q: "Assertion (A): Restriction enzymes are called 'molecular scissors'.\nReason (R): They cut DNA strands at specific recognition sites.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 32,
+                q: "Assertion (A): Bt cotton is resistant to pest infestation by bollworms.\nReason (R): Bt cotton contains cryIAc gene isolated from Bacillus thuringiensis.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 33,
+                q: "Assertion (A): Proinsulin contains an extra stretch called the C-peptide.\nReason (R): C-peptide is retained in the mature functional insulin molecule.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 2
+            },
+            {
+                type: "ar",
+                id: 34,
+                q: "Assertion (A): In gene therapy for ADA deficiency, lymphocytes are periodically infused into the patient.\nReason (R): Lymphocytes introduced into patient are not immortal cells.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 35,
+                q: "Assertion (A): Agrobacterium tumefaciens is called a natural genetic engineer of plants.\nReason (R): It transfers a piece of DNA (T-DNA) into plant genome causing crown gall tumors.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 36,
+                q: "Assertion (A): DNA fragments move towards the anode during agarose gel electrophoresis.\nReason (R): DNA molecules carry a positive charge due to phosphate groups.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 2
+            },
+            {
+                type: "ar",
+                id: 37,
+                q: "Assertion (A): Thermus aquaticus is used as a source for thermostable DNA polymerase in PCR.\nReason (R): Taq polymerase remains active during high-temperature denaturation steps.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 38,
+                q: "Assertion (A): RNA interference (RNAi) is triggered by double-stranded RNA (dsRNA).\nReason (R): dsRNA binds to mRNA and promotes its translation into proteins.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 2
+            },
+            {
+                type: "ar",
+                id: 39,
+                q: "Assertion (A): Insertion of recombinant DNA at BamHI site of pBR322 leads to loss of tetracycline resistance.\nReason (R): BamHI site is located within the tet<sup>R</sup> gene region.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 40,
+                q: "Assertion (A): Transgenic animals are created to study complex human diseases like cancer and Alzheimer's.\nReason (R): Transgenic models express specific human genes to analyze disease progression.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 41,
+                q: "Assertion (A): Biopiracy deprives indigenous communities of potential financial revenues.\nReason (R): Patents are granted to foreign corporations on traditional bio-resources without authorization.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 42,
+                q: "Assertion (A): Plasmids are extrachromosomal, autonomous circular DNA molecules.\nReason (R): Plasmids can replicate independently within host bacterial cells.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 43,
+                q: "Assertion (A): PCR consists of three steps: Denaturation, Annealing, and Extension.\nReason (R): Primers bind to single stranded DNA during Extension phase.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 2
+            },
+            {
+                type: "ar",
+                id: 44,
+                q: "Assertion (A): Transgenic milk produced by cow Rosie is nutritionally more balanced for human babies.\nReason (R): It contains human protein alpha-lactalbumin.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 45,
+                q: "Assertion (A): Microinjection is a direct method of introducing foreign recombinant DNA.\nReason (R): Foreign DNA is injected directly into nucleus of animal egg or cell.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 46,
+                q: "Assertion (A): Downstream processing is a major phase in recombinant product commercialization.\nReason (R): It includes gene cloning and vector construction.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 2
+            },
+            {
+                type: "ar",
+                id: 47,
+                q: "Assertion (A): Bt toxin crystals do not kill the bacteria that produce them.\nReason (R): Bt toxin exists as an inactive protoxin in bacteria.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 48,
+                q: "Assertion (A): cDNA library represents only the expressed genes in a specific cell type.\nReason (R): cDNA is synthesized from mRNA using reverse transcriptase enzyme.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 49,
+                q: "Assertion (A): Chilling with ice-cold ethanol precipitates purified DNA.\nReason (R): DNA is insoluble in cold ethanol.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 50,
+                q: "Assertion (A): GEAC evaluates the environmental safety of GM crop field trials in India.\nReason (R): Genetic modification of organisms can have unpredictable ecological impacts.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 51,
+                q: "Assertion (A): Alkaline phosphatase is used to prevent self-ligation of vector DNA.\nReason (R): It removes 5'-phosphate group from cut ends of linear vector DNA.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 52,
+                q: "Assertion (A): Golden Rice can help prevent childhood blindness in underdeveloped nations.\nReason (R): It contains high concentrations of Provitamin A.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 53,
+                q: "Assertion (A): Nematode Meloidogyne incognita infects roots of tobacco plants.\nReason (R): RNAi strategy was used to make tobacco plants resistant to this nematode.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 1
+            },
+            {
+                type: "ar",
+                id: 54,
+                q: "Assertion (A): Stirred tank bioreactor provides optimum growth parameters.\nReason (R): Parameters include pH, temperature, oxygen concentration and substrate supply.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 55,
+                q: "Assertion (A): Polymerase Chain Reaction can detect HIV in early stages.\nReason (R): PCR amplifies viral nucleic acid even when concentration is extremely low.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 56,
+                q: "Assertion (A): DNA ligase joins two DNA fragments together.\nReason (R): It forms phosphodiester bonds between adjacent nucleotides.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 57,
+                q: "Assertion (A): Insertion of recombinant gene in lacZ gene produces white bacterial colonies.\nReason (R): Insertional inactivation disables beta-galactosidase production.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 58,
+                q: "Assertion (A): Permanent cure for ADA deficiency is possible if gene isolated from marrow cells is introduced at early embryonic stages.\nReason (R): Embryonic stem cells have high potential to differentiate and proliferate permanently.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+            {
+                type: "ar",
+                id: 59,
+                q: "Assertion (A): Traditional breeding methods often lead to inclusion of undesirable genes.\nReason (R): Genetic engineering allows introduction of only desirable genes into host.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 1
+            },
+            {
+                type: "ar",
+                id: 60,
+                q: "Assertion (A): Ethidium bromide stained DNA fragments fluoresce under UV light.\nReason (R): Ethidium bromide intercalates between stacked base pairs of DNA.",
+                options: [
+                    "Both (A) and (R) are true and (R) is the correct explanation of (A).",
+                    "Both (A) and (R) are true but (R) is NOT the correct explanation of (A).",
+                    "(A) is true but (R) is false.",
+                    "(A) is false but (R) is true."
+                ],
+                correct: 0
+            },
+
+            // ================= 20 CASE STUDY-BASED QUESTIONS =================
+            // CASE STUDY 1: Tobacco Plant Resistance via RNAi (Q61 - Q65)
+            {
+                type: "case",
+                id: 61,
+                caseTitle: "CASE STUDY 1: RNA Interference in Agricultural Crop Protection",
+                caseText: "A scientist works on protecting tobacco crops from the parasitic root-knot nematode, Meloidogyne incognita, which causes severe yield drop. Using Agrobacterium vectors, nematode-specific genes were introduced into the host plant. The construct was designed to produce both sense and anti-sense RNA in host plant cells.",
+                q: "What was the purpose of producing both sense and anti-sense RNA in the plant cells?",
+                options: [
+                    "To form double-stranded RNA (dsRNA) that initiates RNAi.",
+                    "To increase mRNA translation speed.",
+                    "To synthesize toxic crystal proteins.",
+                    "To stimulate root hair branching."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 62,
+                caseTitle: "CASE STUDY 1: RNA Interference in Agricultural Crop Protection",
+                caseText: "A scientist works on protecting tobacco crops from the parasitic root-knot nematode, Meloidogyne incognita, which causes severe yield drop. Using Agrobacterium vectors, nematode-specific genes were introduced into the host plant. The construct was designed to produce both sense and anti-sense RNA in host plant cells.",
+                q: "What role does Dicer enzyme play in the silence mechanism?",
+                options: [
+                    "It cuts dsRNA into small interfering RNAs (siRNAs).",
+                    "It joins the target mRNA to host DNA.",
+                    "It transcribes RNA into cDNA.",
+                    "It degrades cell membrane lipids."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 63,
+                caseTitle: "CASE STUDY 1: RNA Interference in Agricultural Crop Protection",
+                caseText: "A scientist works on protecting tobacco crops from the parasitic root-knot nematode, Meloidogyne incognita, which causes severe yield drop. Using Agrobacterium vectors, nematode-specific genes were introduced into the host plant. The construct was designed to produce both sense and anti-sense RNA in host plant cells.",
+                q: "The consequence of silencing specific nematode mRNA in the host plant is that:",
+                options: [
+                    "The parasite cannot survive in the transgenic host.",
+                    "The plant produces excess phytohormones.",
+                    "The nematode transforms into a non-pathogenic bacterium.",
+                    "The plant loses chlorophyll pigments."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 64,
+                caseTitle: "CASE STUDY 1: RNA Interference in Agricultural Crop Protection",
+                caseText: "A scientist works on protecting tobacco crops from the parasitic root-knot nematode, Meloidogyne incognita, which causes severe yield drop. Using Agrobacterium vectors, nematode-specific genes were introduced into the host plant. The construct was designed to produce both sense and anti-sense RNA in host plant cells.",
+                q: "Which vector was utilized to introduce nematode-specific genes into tobacco plant cells?",
+                options: [
+                    "Agrobacterium tumefaciens Ti plasmid",
+                    "pBR322 Plasmid",
+                    "Bacteriophage Lambda",
+                    "pUC19 Plasmid"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 65,
+                caseTitle: "CASE STUDY 1: RNA Interference in Agricultural Crop Protection",
+                caseText: "A scientist works on protecting tobacco crops from the parasitic root-knot nematode, Meloidogyne incognita, which causes severe yield drop. Using Agrobacterium vectors, nematode-specific genes were introduced into the host plant. The construct was designed to produce both sense and anti-sense RNA in host plant cells.",
+                q: "RNA interference is a mechanism of cellular defense present in:",
+                options: [
+                    "All eukaryotic organisms",
+                    "Only prokaryotes",
+                    "Only fungi and gymnosperms",
+                    "Only mammalian lymphocytes"
+                ],
+                correct: 0
+            },
+
+            // CASE STUDY 2: Recombinant Human Insulin Engineering (Q66 - Q70)
+            {
+                type: "case",
+                id: 66,
+                caseTitle: "CASE STUDY 2: Recombinant Insulin Production by Eli Lilly",
+                caseText: "In 1983, American pharmaceutical company Eli Lilly developed human insulin using recombinant DNA technology. In humans, insulin is synthesized as a prohormone containing chains A, B, and C. Processing yields mature insulin lacking chain C.",
+                q: "How did Eli Lilly produce mature human insulin in Escherichia coli?",
+                options: [
+                    "Synthesized DNA sequences corresponding to A and B chains separately, expressed them in E. coli, and combined them via disulfide bonds.",
+                    "Expressed proinsulin gene containing C-peptide and cleaved C-peptide in vitro.",
+                    "Extracted human pancreatic cells and cloned them directly.",
+                    "Used yeast vector to secrete complete active insulin directly."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 67,
+                caseTitle: "CASE STUDY 2: Recombinant Insulin Production by Eli Lilly",
+                caseText: "In 1983, American pharmaceutical company Eli Lilly developed human insulin using recombinant DNA technology. In humans, insulin is synthesized as a prohormone containing chains A, B, and C. Processing yields mature insulin lacking chain C.",
+                q: "What connects Chain A and Chain B in functional mature insulin?",
+                options: [
+                    "Disulfide bonds",
+                    "Hydrogen bonds",
+                    "Phosphodiester bonds",
+                    "Ionic salt bridges"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 68,
+                caseTitle: "CASE STUDY 2: Recombinant Insulin Production by Eli Lilly",
+                caseText: "In 1983, American pharmaceutical company Eli Lilly developed human insulin using recombinant DNA technology. In humans, insulin is synthesized as a prohormone containing chains A, B, and C. Processing yields mature insulin lacking chain C.",
+                q: "Why was slaughterhouse animal insulin (pork/beef) discontinued for many diabetic patients?",
+                options: [
+                    "It triggered allergic reactions and immune responses in patients.",
+                    "It was far less potent than plant carbohydrates.",
+                    "It lacked peptide chain A entirely.",
+                    "It caused immediate gene mutations in host cells."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 69,
+                caseTitle: "CASE STUDY 2: Recombinant Insulin Production by Eli Lilly",
+                caseText: "In 1983, American pharmaceutical company Eli Lilly developed human insulin using recombinant DNA technology. In humans, insulin is synthesized as a prohormone containing chains A, B, and C. Processing yields mature insulin lacking chain C.",
+                q: "What is the key structural difference between Proinsulin and Mature Insulin?",
+                options: [
+                    "Proinsulin contains C-peptide while mature insulin lacks C-peptide.",
+                    "Mature insulin contains extra alpha helix domain.",
+                    "Proinsulin contains only B-chain.",
+                    "Mature insulin contains three disulfide bridges on C-peptide."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 70,
+                caseTitle: "CASE STUDY 2: Recombinant Insulin Production by Eli Lilly",
+                caseText: "In 1983, American pharmaceutical company Eli Lilly developed human insulin using recombinant DNA technology. In humans, insulin is synthesized as a prohormone containing chains A, B, and C. Processing yields mature insulin lacking chain C.",
+                q: "How many amino acid residues comprise human mature insulin (A + B chains)?",
+                options: [
+                    "51 amino acids (A:21, B:30)",
+                    "84 amino acids (A:40, B:44)",
+                    "60 amino acids (A:30, B:30)",
+                    "100 amino acids (A:50, B:50)"
+                ],
+                correct: 0
+            },
+
+            // CASE STUDY 3: Clinical Gene Therapy for ADA Deficiency (Q71 - Q75)
+            {
+                type: "case",
+                id: 71,
+                caseTitle: "CASE STUDY 3: First Clinical Gene Therapy Application",
+                caseText: "In 1990, a 4-year-old girl suffering from Adenosine Deaminase (ADA) deficiency received the world's first clinical gene therapy treatment. ADA enzyme is essential for immune system development; its deficiency leads to severe combined immunodeficiency (SCID).",
+                q: "In gene therapy for ADA deficiency, functional ADA cDNA is delivered into patient's lymphocytes using which vector?",
+                options: [
+                    "Retroviral vector",
+                    "Bacteriophage vector",
+                    "Agrobacterium Ti plasmid",
+                    "Cosmid vector"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 72,
+                caseTitle: "CASE STUDY 3: First Clinical Gene Therapy Application",
+                caseText: "In 1990, a 4-year-old girl suffering from Adenosine Deaminase (ADA) deficiency received the world's first clinical gene therapy treatment. ADA enzyme is essential for immune system development; its deficiency leads to severe combined immunodeficiency (SCID).",
+                q: "Why does the patient require periodic infusion of genetically engineered lymphocytes?",
+                options: [
+                    "Because cultured lymphocytes have a finite lifespan and are not immortal.",
+                    "Because retroviral vectors lose their promoter activity after 2 weeks.",
+                    "Because ADA cDNA degrades inside the host cytoplasm.",
+                    "Because recipient red blood cells destroy engineered lymphocytes."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 73,
+                caseTitle: "CASE STUDY 3: First Clinical Gene Therapy Application",
+                caseText: "In 1990, a 4-year-old girl suffering from Adenosine Deaminase (ADA) deficiency received the world's first clinical gene therapy treatment. ADA enzyme is essential for immune system development; its deficiency leads to severe combined immunodeficiency (SCID).",
+                q: "What approach could provide a permanent cure for ADA deficiency?",
+                options: [
+                    "Introducing ADA gene from bone marrow into cells at early embryonic stages.",
+                    "Giving weekly oral doses of synthetic ADA enzyme.",
+                    "Performing bone marrow transplantation at age 25.",
+                    "Repeated blood transfusions from non-immunized donors."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 74,
+                caseTitle: "CASE STUDY 3: First Clinical Gene Therapy Application",
+                caseText: "In 1990, a 4-year-old girl suffering from Adenosine Deaminase (ADA) deficiency received the world's first clinical gene therapy treatment. ADA enzyme is essential for immune system development; its deficiency leads to severe combined immunodeficiency (SCID).",
+                q: "Which enzyme is missing or defective in SCID patients receiving this therapy?",
+                options: [
+                    "Adenosine Deaminase",
+                    "DNA Polymerase III",
+                    "Alkaline Phosphatase",
+                    "Restriction Endonuclease"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 75,
+                caseTitle: "CASE STUDY 3: First Clinical Gene Therapy Application",
+                caseText: "In 1990, a 4-year-old girl suffering from Adenosine Deaminase (ADA) deficiency received the world's first clinical gene therapy treatment. ADA enzyme is essential for immune system development; its deficiency leads to severe combined immunodeficiency (SCID).",
+                q: "Alternative existing treatment options for ADA deficiency include bone marrow transplantation and:",
+                options: [
+                    "Enzyme Replacement Therapy",
+                    "Dialysis",
+                    "Radiotherapy",
+                    "Monoclonal Antibody Injections"
+                ],
+                correct: 0
+            },
+
+            // CASE STUDY 4: Biopiracy and Patent Issues (Q76 - Q80)
+            {
+                type: "case",
+                id: 76,
+                caseTitle: "CASE STUDY 4: Biosafety, Biopiracy & Intellectual Property Rights",
+                caseText: "Basmati rice is distinct for its unique aroma and long grains. India has 27 documented varieties of Basmati. In 1997, an American company obtained patent rights on Basmati rice lines through the US Patent and Trademark Office, claiming it as an invention.",
+                q: "How did the foreign company claim patent rights on Basmati rice?",
+                options: [
+                    "By crossing Indian Basmati with semi-dwarf varieties and claiming a new novelty trait.",
+                    "By sequencing the complete genome of wild Basmati.",
+                    "By synthesizing artificial chemical genes resembling Basmati aroma.",
+                    "By cloning rice chloroplasts using retroviral vectors."
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 77,
+                caseTitle: "CASE STUDY 4: Biosafety, Biopiracy & Intellectual Property Rights",
+                caseText: "Basmati rice is distinct for its unique aroma and long grains. India has 27 documented varieties of Basmati. In 1997, an American company obtained patent rights on Basmati rice lines through the US Patent and Trademark Office, claiming it as an invention.",
+                q: "What term describes unauthorized commercial exploitation of biological resources indigenous to a nation?",
+                options: [
+                    "Biopiracy",
+                    "Biofortification",
+                    "Bioremediation",
+                    "Biomagnification"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 78,
+                caseTitle: "CASE STUDY 4: Biosafety, Biopiracy & Intellectual Property Rights",
+                caseText: "Basmati rice is distinct for its unique aroma and long grains. India has 27 documented varieties of Basmati. In 1997, an American company obtained patent rights on Basmati rice lines through the US Patent and Trademark Office, claiming it as an invention.",
+                q: "Which Indian statutory body evaluates GM research safety and validity of introducing GM organisms?",
+                options: [
+                    "GEAC (Genetic Engineering Approval Committee)",
+                    "ICAR (Indian Council of Agricultural Research)",
+                    "CSIR (Council of Scientific & Industrial Research)",
+                    "AIIMS Ethics Board"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 79,
+                caseTitle: "CASE STUDY 4: Biosafety, Biopiracy & Intellectual Property Rights",
+                caseText: "Basmati rice is distinct for its unique aroma and long grains. India has 27 documented varieties of Basmati. In 1997, an American company obtained patent rights on Basmati rice lines through the US Patent and Trademark Office, claiming it as an invention.",
+                q: "Which other traditional Indian medicinal plants faced biopiracy patent attempts internationally?",
+                options: [
+                    "Turmeric (Haldi) and Neem",
+                    "Eucalyptus and Pine",
+                    "Tulsi and Sugarcane",
+                    "Banyan and Mustard"
+                ],
+                correct: 0
+            },
+            {
+                type: "case",
+                id: 80,
+                caseTitle: "CASE STUDY 4: Biosafety, Biopiracy & Intellectual Property Rights",
+                caseText: "Basmati rice is distinct for its unique aroma and long grains. India has 27 documented varieties of Basmati. In 1997, an American company obtained patent rights on Basmati rice lines through the US Patent and Trademark Office, claiming it as an invention.",
+                q: "How many documented varieties of Basmati rice are grown in India?",
+                options: [
+                    "27 varieties",
+                    "100 varieties",
+                    "5 varieties",
+                    "50 varieties"
+                ],
+                correct: 0
+            },
+
+            // ================= 10 DIAGRAM-BASED QUESTIONS =================
+            {
+                type: "diagram",
+                id: 81,
+                diagramType: "pBR322",
+                q: "Examine the vector map of Cloning Vector pBR322 below. Identify the region labeled 'A' (located within tet<sup>R</sup> gene sequence):",
+                options: [
+                    "BamHI restriction site",
+                    "ori site",
+                    "rop gene",
+                    "EcoRI site"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 82,
+                diagramType: "PCR",
+                q: "In the schematic diagram of Polymerase Chain Reaction (PCR) steps shown below, identify Stage 2 (occurring at ~54 °C):",
+                options: [
+                    "Annealing of Primers",
+                    "Denaturation of dsDNA",
+                    "Extension by Taq Polymerase",
+                    "Ligation of Sticky Ends"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 83,
+                diagramType: "Gel",
+                q: "Analyze the Agarose Gel Electrophoresis band profile below. Which DNA band (A, B, C, or D) contains the smallest molecular weight DNA fragment?",
+                options: [
+                    "Band D (closest to Anode +)",
+                    "Band A (closest to Well/Cathode -)",
+                    "Band B",
+                    "Band C"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 84,
+                diagramType: "Proinsulin",
+                q: "Examine the maturation diagram of Human Insulin. Identify the peptide chain 'C' that is removed during maturation:",
+                options: [
+                    "C-Peptide chain",
+                    "A-Peptide chain",
+                    "B-Peptide chain",
+                    "Disulfide bridge"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 85,
+                diagramType: "Bioreactor",
+                q: "Refer to the diagram of Simple Stirred-tank Bioreactor. What is the primary role of the impeller/blade component labeled 'X'?",
+                options: [
+                    "Ensuring uniform mixing and oxygen availability throughout medium",
+                    "Measuring exact pH values",
+                    "Sterilizing incoming steam",
+                    "Collecting purified downstream protein product"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 86,
+                diagramType: "pBR322",
+                q: "In cloning vector pBR322, what is the specific role of the site marked 'rop'?",
+                options: [
+                    "Codes for proteins involved in replication of plasmid",
+                    "Acts as primary ampicillin selectable marker",
+                    "Recognizes restriction enzyme HindIII only",
+                    "Initiates DNA transcription promoter cascade"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 87,
+                diagramType: "PCR",
+                q: "In the PCR cycle diagram, what enzyme is active during Step 3 (Extension at 72 °C)?",
+                options: [
+                    "Taq DNA Polymerase",
+                    "RNA Polymerase II",
+                    "DNA Ligase",
+                    "Helicase"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 88,
+                diagramType: "Gel",
+                q: "In agarose gel electrophoresis, what chemical stain is required to visualize DNA bands under UV illumination?",
+                options: [
+                    "Ethidium Bromide",
+                    "Methylene Blue",
+                    "Crystal Violet",
+                    "Iodine solution"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 89,
+                diagramType: "Proinsulin",
+                q: "What type of chemical linkages hold Chain A and Chain B together in mature human insulin?",
+                options: [
+                    "Disulfide bonds (-S-S-)",
+                    "Glycosidic linkages",
+                    "Phosphodiester bonds",
+                    "Hydrogen bonds"
+                ],
+                correct: 0
+            },
+            {
+                type: "diagram",
+                id: 90,
+                diagramType: "Bioreactor",
+                q: "In a sparged stirred-tank bioreactor, air bubbles are sparged through the culture medium primarily to:",
+                options: [
+                    "Increase surface area for oxygen transfer",
+                    "Decrease liquid culture temperature rapidly",
+                    "Inactivate unwanted viral proteins",
+                    "Precipitate cellular recombinant products"
+                ],
+                correct: 0
+            }
+        ];
+
+        // GLOBAL APP STATE
+        let candidateName = "";
+        let shuffledQuestions = [];
+        let userAnswers = {}; // { qIndex: optionIndex }
+        let markedForReview = {}; // { qIndex: boolean }
+        let visitedQuestions = {}; // { qIndex: boolean }
+        let currentQIndex = 0;
+        let timerSeconds = 3600; // 1 Hour
+        let timerInterval = null;
+        let captchaAns = 0;
+        let examSubmitted = false;
+
+        // Initialize Captcha & Date Verification on Load
+        window.onload = function() {
+            generateCaptcha();
+        };
+
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            captchaAns = num1 + num2;
+            document.getElementById('captchaDisplay').innerText = `${num1} + ${num2} = ?`;
+        }
+
+        // STRING SEED SHUFFLE ALGORITHM FOR UNIQUE CANDIDATE ORDER
+        function seedShuffle(array, seedString) {
+            let hash = 0;
+            for (let i = 0; i < seedString.length; i++) {
+                hash = seedString.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            
+            let result = [...array];
+            let m = result.length, t, i;
+            while (m) {
+                let pseudoRandom = Math.abs(Math.sin(hash++)) * 10000;
+                i = Math.floor((pseudoRandom - Math.floor(pseudoRandom)) * m--);
+                t = result[m];
+                result[m] = result[i];
+                result[i] = t;
+            }
+            return result;
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('candidateName').value.trim();
+            const passInput = document.getElementById('examPassword').value.trim();
+            const captchaInput = parseInt(document.getElementById('captchaInput').value.trim());
+            const errorDiv = document.getElementById('loginError');
+
+            errorDiv.classList.add('hidden');
+
+            // 1. Password Verification (Current Date DDMMYYYY)
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yyyy = now.getFullYear();
+            const expectedPass = `${dd}${mm}${yyyy}`;
+
+            if (passInput !== expectedPass) {
+                errorDiv.innerText = `Invalid Password! Password must be today's date in DDMMYYYY format.`;
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            // 2. Captcha Verification
+            if (captchaInput !== captchaAns) {
+                errorDiv.innerText = `Incorrect Captcha answer. Please try again.`;
+                errorDiv.classList.remove('hidden');
+                generateCaptcha();
+                return;
+            }
+
+            candidateName = nameInput;
+
+            // Seed shuffle question bank based on candidate name
+            shuffledQuestions = seedShuffle(masterQuestions, candidateName.toLowerCase());
+
+            // Update Header & Watermark
+            document.getElementById('headerCandidateName').innerText = candidateName;
+            document.getElementById('resCandidateName').innerText = candidateName;
+            
+            setupWatermark(candidateName);
+
+            // Hide Modal Gate & Launch Exam
+            document.getElementById('verificationGate').classList.add('hidden');
+
+            // Request Full Screen Enforcement
+            requestFullScreen();
+
+            // Start Exam Timer & Security Listeners
+            startTimer();
+            setupSecurityListeners();
+
+            // Render Palette & First Question
+            renderPalette();
+            loadQuestion(0);
+        }
+
+        function setupWatermark(name) {
+            const grid = document.getElementById('watermarkGrid');
+            grid.innerHTML = '';
+            grid.classList.remove('hidden');
+            for (let i = 0; i < 12; i++) {
+                const item = document.createElement('div');
+                item.className = 'watermark-item';
+                item.innerText = `${name}\n+91 8910587106`;
+                grid.appendChild(item);
+            }
+        }
+
+        function setupSecurityListeners() {
+            // Context menu block
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Keyboard shortcut block
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                   (e.ctrlKey && e.key === 'u') ||
+                   e.key === 'PrintScreen') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Tab Switching / Visibility Change Auto-Submit
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden && !examSubmitted) {
+                    alert("SECURITY VIOLATION: You switched tabs or minimized the window. Your exam is being submitted immediately.");
+                    forceSubmitTest();
+                }
+            });
+
+            // Fullscreen change detection
+            document.addEventListener('fullscreenchange', function() {
+                if (!document.fullscreenElement && !examSubmitted) {
+                    alert("SECURITY VIOLATION: You exited Full-Screen mode. The exam will now auto-submit.");
+                    forceSubmitTest();
+                }
+            });
+        }
+
+        function requestFullScreen() {
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().catch(err => console.log(err));
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's Up! Your exam is being submitted.");
+                    forceSubmitTest();
+                    return;
+                }
+                timerSeconds--;
+                const mins = Math.floor(timerSeconds / 60);
+                const secs = timerSeconds % 60;
+                document.getElementById('timerDisplay').innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function renderPalette() {
+            const paletteGrid = document.getElementById('paletteGrid');
+            paletteGrid.innerHTML = '';
+
+            let countAnswered = 0;
+            let countNotAnswered = 0;
+            let countMarked = 0;
+            let countNotVisited = 0;
+
+            shuffledQuestions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all flex items-center justify-center shadow-sm border ';
+
+                const isAnswered = userAnswers[idx] !== undefined;
+                const isMarked = markedForReview[idx] === true;
+                const isVisited = visitedQuestions[idx] === true;
+
+                if (isMarked) {
+                    btn.classList.add('bg-amber-400', 'text-amber-950', 'border-amber-500');
+                    countMarked++;
+                } else if (isAnswered) {
+                    btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                    countAnswered++;
+                } else if (isVisited) {
+                    btn.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+                    countNotAnswered++;
+                } else {
+                    btn.classList.add('bg-slate-200', 'text-slate-700', 'border-slate-300');
+                    countNotVisited++;
+                }
+
+                if (idx === currentQIndex) {
+                    btn.classList.add('ring-2', 'ring-blue-700', 'ring-offset-1', 'scale-110');
+                }
+
+                btn.innerText = idx + 1;
+                btn.onclick = () => loadQuestion(idx);
+                paletteGrid.appendChild(btn);
+            });
+
+            document.getElementById('countAnswered').innerText = countAnswered;
+            document.getElementById('countNotAnswered').innerText = countNotAnswered;
+            document.getElementById('countMarked').innerText = countMarked;
+            document.getElementById('countNotVisited').innerText = countNotVisited;
+        }
+
+        function loadQuestion(idx) {
+            currentQIndex = idx;
+            visitedQuestions[idx] = true;
+
+            document.getElementById('questionNumberBadge').innerText = `Question ${idx + 1} of 90`;
+            document.getElementById('prevBtn').disabled = (idx === 0);
+
+            const q = shuffledQuestions[idx];
+            const area = document.getElementById('questionContentArea');
+            area.innerHTML = '';
+
+            let html = '';
+
+            // Render SVG Diagram for Diagram-based Questions
+            if (q.type === 'diagram') {
+                html += `<div class="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-center items-center">
+                    ${getDiagramSVG(q.diagramType)}
+                </div>`;
+            }
+
+            // Case Study Prompt Banner
+            if (q.type === 'case') {
+                html += `<div class="mb-4 bg-indigo-50 border border-indigo-200 p-3.5 rounded-xl text-xs text-indigo-950">
+                    <h3 class="font-extrabold text-indigo-900 border-b border-indigo-200 pb-1 mb-1.5"><i class="fa-solid fa-book-open mr-1.5"></i> ${q.caseTitle}</h3>
+                    <p class="leading-relaxed font-medium">${q.caseText}</p>
+                </div>`;
+            }
+
+            // Question Text
+            html += `<h2 class="text-sm md:text-base font-bold text-slate-800 mb-3 leading-snug">${q.q}</h2>`;
+
+            // Statements Rendering
+            if (q.type === 'statement') {
+                html += `<div class="mb-4 bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2 text-xs md:text-sm text-slate-800">
+                    <p><strong>Statement I:</strong> ${q.statement1}</p>
+                    <p><strong>Statement II:</strong> ${q.statement2}</p>
+                </div>`;
+            }
+
+            // Options List
+            html += `<div class="space-y-2.5 mt-4">`;
+            q.options.forEach((opt, oIdx) => {
+                const isSelected = userAnswers[idx] === oIdx;
+                html += `
+                    <label onclick="selectOption(${oIdx})" class="flex items-start space-x-3 p-3 rounded-xl border cursor-pointer transition-all text-xs md:text-sm ${
+                        isSelected ? 'bg-blue-50 border-blue-600 text-blue-950 font-semibold ring-1 ring-blue-500' : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
+                    }">
+                        <input type="radio" name="qOpt" ${isSelected ? 'checked' : ''} class="mt-0.5 text-blue-600 focus:ring-blue-500">
+                        <span class="flex-1">${opt}</span>
+                    </label>
+                `;
+            });
+            html += `</div>`;
+
+            area.innerHTML = html;
+            renderPalette();
+        }
+
+        // GENERATE INLINE SVG DIAGRAMS FOR RECOMBINANT VECTOR, PCR, GEL, PROINSULIN & BIOREACTOR
+        function getDiagramSVG(type) {
+            if (type === 'pBR322') {
+                return `
+                    <svg width="260" height="200" viewBox="0 0 260 200" class="max-w-full h-auto">
+                        <circle cx="130" cy="100" r="65" fill="none" stroke="#2563eb" stroke-width="8"/>
+                        <text x="130" y="95" text-anchor="middle" font-weight="bold" font-size="12" fill="#1e293b">pBR322</text>
+                        <text x="130" y="112" text-anchor="middle" font-size="10" fill="#64748b">4361 bp</text>
+                        <!-- ampR & tetR genes -->
+                        <path d="M 130 35 A 65 65 0 0 1 195 100" fill="none" stroke="#10b981" stroke-width="8"/>
+                        <text x="175" y="60" font-weight="bold" font-size="10" fill="#047857">amp<sup>R</sup></text>
+                        <path d="M 195 100 A 65 65 0 0 1 130 165" fill="none" stroke="#f59e0b" stroke-width="8"/>
+                        <text x="175" y="145" font-weight="bold" font-size="10" fill="#b45309">tet<sup>R</sup></text>
+                        <!-- Labels -->
+                        <text x="195" y="105" font-weight="bold" font-size="11" fill="#dc2626">A (BamHI)</text>
+                        <text x="65" y="165" font-weight="bold" font-size="10" fill="#475569">rop</text>
+                        <text x="65" y="55" font-weight="bold" font-size="10" fill="#475569">ori</text>
+                    </svg>
+                `;
+            } else if (type === 'PCR') {
+                return `
+                    <svg width="280" height="130" viewBox="0 0 280 130" class="max-w-full h-auto">
+                        <rect width="280" height="130" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+                        <path d="M 20 40 Q 140 10 260 40" fill="none" stroke="#dc2626" stroke-width="3"/>
+                        <path d="M 20 90 Q 140 120 260 90" fill="none" stroke="#2563eb" stroke-width="3"/>
+                        <text x="30" y="25" font-size="10" font-weight="bold" fill="#dc2626">Stage 1: Denaturation (94°C)</text>
+                        <text x="90" y="70" font-size="11" font-weight="bold" fill="#d97706">Stage 2: Annealing (54°C)</text>
+                        <text x="160" y="115" font-size="10" font-weight="bold" fill="#2563eb">Stage 3: Extension (72°C)</text>
+                    </svg>
+                `;
+            } else if (type === 'Gel') {
+                return `
+                    <svg width="260" height="150" viewBox="0 0 260 150" class="max-w-full h-auto">
+                        <rect width="260" height="150" rx="8" fill="#0f172a"/>
+                        <!-- Wells -->
+                        <rect x="30" y="15" width="25" height="8" fill="#334155"/>
+                        <rect x="85" y="15" width="25" height="8" fill="#334155"/>
+                        <rect x="140" y="15" width="25" height="8" fill="#334155"/>
+                        <rect x="195" y="15" width="25" height="8" fill="#334155"/>
+                        <!-- Ethidium Bromide DNA Bands -->
+                        <rect x="85" y="35" width="25" height="4" rx="2" fill="#f97316"/> <text x="115" y="40" font-size="9" fill="#f97316">Band A</text>
+                        <rect x="85" y="60" width="25" height="4" rx="2" fill="#f97316"/> <text x="115" y="65" font-size="9" fill="#f97316">Band B</text>
+                        <rect x="85" y="90" width="25" height="4" rx="2" fill="#f97316"/> <text x="115" y="95" font-size="9" fill="#f97316">Band C</text>
+                        <rect x="85" y="125" width="25" height="4" rx="2" fill="#f97316"/> <text x="115" y="130" font-size="9" font-weight="bold" fill="#f97316">Band D (+ Anode)</text>
+                    </svg>
+                `;
+            } else if (type === 'Proinsulin') {
+                return `
+                    <svg width="270" height="130" viewBox="0 0 270 130" class="max-w-full h-auto">
+                        <path d="M 30 40 Q 80 10 130 40 T 230 40" fill="none" stroke="#2563eb" stroke-width="5"/>
+                        <text x="40" y="30" font-size="10" font-weight="bold" fill="#2563eb">A Chain</text>
+                        <path d="M 30 90 Q 80 120 130 90 T 230 90" fill="none" stroke="#059669" stroke-width="5"/>
+                        <text x="40" y="105" font-size="10" font-weight="bold" fill="#059669">B Chain</text>
+                        <!-- C peptide loop -->
+                        <path d="M 230 40 Q 260 65 230 90" fill="none" stroke="#dc2626" stroke-dasharray="4,4" stroke-width="4"/>
+                        <text x="220" y="68" font-size="11" font-weight="bold" fill="#dc2626">C-Peptide</text>
+                    </svg>
+                `;
+            } else {
+                return `
+                    <svg width="240" height="150" viewBox="0 0 240 150" class="max-w-full h-auto">
+                        <rect x="60" y="20" width="120" height="110" rx="20" fill="#f1f5f9" stroke="#0284c7" stroke-width="3"/>
+                        <line x1="120" y1="10" x2="120" y2="120" stroke="#334155" stroke-width="4"/>
+                        <rect x="90" y="60" width="60" height="8" fill="#0284c7" rx="2"/>
+                        <rect x="90" y="90" width="60" height="8" fill="#0284c7" rx="2"/>
+                        <text x="155" y="80" font-size="10" font-weight="bold" fill="#0369a1">X (Impeller)</text>
+                    </svg>
+                `;
+            }
+        }
+
+        function selectOption(oIdx) {
+            userAnswers[currentQIndex] = oIdx;
+            delete markedForReview[currentQIndex];
+            loadQuestion(currentQIndex);
+        }
+
+        function clearResponse() {
+            delete userAnswers[currentQIndex];
+            delete markedForReview[currentQIndex];
+            loadQuestion(currentQIndex);
+        }
+
+        function markForReview() {
+            markedForReview[currentQIndex] = true;
+            renderPalette();
+            nextQuestion();
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) {
+                loadQuestion(currentQIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < shuffledQuestions.length - 1) {
+                loadQuestion(currentQIndex + 1);
+            }
+        }
+
+        function confirmSubmitTest() {
+            const attempted = Object.keys(userAnswers).length;
+            if (confirm(`Are you sure you want to submit your exam?\n\nTotal Attempted: ${attempted} / 90`)) {
+                forceSubmitTest();
+            }
+        }
+
+        function forceSubmitTest() {
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Marks (+4 correct, -1 wrong)
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unattemptedCount = 0;
+
+            shuffledQuestions.forEach((q, idx) => {
+                const ans = userAnswers[idx];
+                if (ans === undefined) {
+                    unattemptedCount++;
+                } else if (ans === q.correct) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            const totalScore = (correctCount * 4) - (incorrectCount * 1);
+            const totalAttempted = correctCount + incorrectCount;
+            const accuracy = totalAttempted > 0 ? ((correctCount / totalAttempted) * 100).toFixed(1) : 0;
+
+            // Display Score Summary
+            document.getElementById('resTotalScore').innerText = `${totalScore} / 360`;
+            document.getElementById('resAttempted').innerText = `${totalAttempted} / 90`;
+            document.getElementById('resAccuracy').innerText = `${accuracy}%`;
+            document.getElementById('resCorrect').innerText = correctCount;
+            document.getElementById('resIncorrect').innerText = incorrectCount;
+            document.getElementById('resUnattempted').innerText = unattemptedCount;
+
+            // Display Results Modal
+            document.getElementById('resultModal').classList.remove('hidden');
+
+            // Render Chart.js Graphical Analysis
+            renderChart(correctCount, incorrectCount, unattemptedCount);
+        }
+
+        function renderChart(correct, incorrect, unattempted) {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Correct (+4)', 'Incorrect (-1)', 'Unattempted'],
+                    datasets: [{
+                        data: [correct, incorrect, unattempted],
+                        backgroundColor: ['#10b981', '#f43f5e', '#cbd5e1'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 11, weight: 'bold' },
+                                boxWidth: 12
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function sendMarksToWhatsApp() {
+            const card = document.getElementById('resultCardCapture');
+
+            // Convert Scorecard DOM element to high-resolution PNG image
+            html2canvas(card, { scale: 2 }).then(canvas => {
+                const imageBase64 = canvas.toDataURL("image/png");
+
+                // Prepare WhatsApp Pre-filled message with breakdown
+                const scoreText = document.getElementById('resTotalScore').innerText;
+                const accuracyText = document.getElementById('resAccuracy').innerText;
+                const correct = document.getElementById('resCorrect').innerText;
+                const incorrect = document.getElementById('resIncorrect').innerText;
+
+                const msg = encodeURIComponent(
+                    `*NEET BIOLOGY CBT EXAM RESULT REPORT*\n` +
+                    `*Topic:* NEET BIOLOGY XII EXAM SERIES 6 SET A\n` +
+                    `*Candidate Name:* ${candidateName}\n` +
+                    `*Total Score:* ${scoreText}\n` +
+                    `*Accuracy:* ${accuracyText}\n` +
+                    `*Correct Answers:* ${correct}\n` +
+                    `*Incorrect Answers:* ${incorrect}\n\n` +
+                    `_Sir, I have completed my CBT exam. Attached is my score summary card screenshot._`
+                );
+
+                const waUrl = `https://api.whatsapp.com/send?phone=918910587106&text=${msg}`;
+                
+                // Prompt candidate to download screenshot image
+                const link = document.createElement('a');
+                link.download = `${candidateName.replace(/\s+/g, '_')}_NEET_Biotech_Result.png`;
+                link.href = imageBase64;
+                link.click();
+
+                // Open WhatsApp chat
+                window.open(waUrl, '_blank');
+            });
+        }
+    </script>
+</body>
+</html>
